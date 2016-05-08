@@ -55,12 +55,13 @@ class Database
     private function executeQuery()
     {
         $this->sql = mysqli_real_escape_string($this->link, $this->sql);
-        $this->result = mysqli_query($this->link, $this->sql);
+
         if (mysqli_errno($this->link)) {
             echo "MySQL error " . mysqli_errno($this->link) . ": "
                 . mysqli_errno($this->link) . "\n<br>When executing <br>\n$this->sql\n<br>";
             return false;
         }
+        $this->result = mysqli_query($this->link, $this->sql);
         return true;
     }
 
@@ -97,7 +98,7 @@ class Database
 
     public function add_todo($topic, $due)
     {
-        $this->sql = "INSERT INTO `it57160438`.`sticky_todo` (START`, `POST_BY`, `DUE`,  `TOPIC`) VALUES (\'" . $this->username . "\', \'" . $due . "\', \'" . $topic . "\');";
+        $this->sql = "INSERT INTO `it57160438`.`sticky_todo` (START`, `POST_BY`, `DUE`,  `TOPIC`) VALUES ('" . $this->username . "', '" . $due . "', '" . $topic . "');";
         $this->executeQuery();
     }
 
@@ -111,7 +112,7 @@ class Database
         } else {
             echo "your parameter is invalid.";
         }
-        $this->sql = "UPDATE `it57160438`.`sticky_todo` SET `STATUS` = \'" . $status . "\' WHERE `sticky_todo`.`ID` = " . $id . ";";
+        $this->sql = "UPDATE `it57160438`.`sticky_todo` SET `STATUS` = '" . $status . "' WHERE `sticky_todo`.`ID` = " . $id . ";";
         $this->executeQuery();
     }
 
@@ -125,7 +126,7 @@ class Database
         } else {
             echo "your parameter is invalid.";
         }
-        $this->sql = "UPDATE `it57160438`.`sticky_todo` SET `VISIBLE` = \'" . $visible . "\' WHERE `sticky_todo`.`ID` = " . $id . ";";
+        $this->sql = "UPDATE `it57160438`.`sticky_todo` SET `VISIBLE` = '" . $visible . "' WHERE `sticky_todo`.`ID` = " . $id . ";";
         $this->executeQuery();
     }
 
@@ -133,11 +134,30 @@ class Database
      * User Authentication.
      */
 
-    public function signIn()
+    public function signIn($username, $password, $stayLoggedIn)
     {
-        /*
-         * Todo sign in
-         */
+        $password = md5($password);
+        $this->sql = "SELECT `sticky_user`.`USERNAME`, `sticky_user`.`PASSWORD` FROM `sticky_user` WHERE `sticky_user`.`USERNAME` = '".$username."' AND `sticky`.`PASSWORD` = '".$password."'";
+        $this->executeQuery();
+        if(mysqli_num_rows($this->result) == 1)
+        {
+            if($stayLoggedIn)
+            {
+                $_COOKIE['username'] = $stayLoggedIn;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /*
+     * Edit todo topic
+     */
+
+    public function edit_topic($id, $topic)
+    {
+        $this->sql = "UPDATE `it57160438`.`sticky_todo` SET `sticky_todo`.`TOPIC` = '".$topic."' WHERE `sticky_todo`.`ID` = ".$id.";";
+        $this->executeQuery();
     }
 
     /*
@@ -147,7 +167,7 @@ class Database
     public function add_user($username, $password)
     {
         if (isset($username) AND isset($password)) {
-            $this->sql = "INSERT INTO `it57160438`.`sticky_user` (USERNAME`, `PASSWORD`) VALUES (\'" . $username . "\', \'" . md5($password) . "\');";
+            $this->sql = "INSERT INTO `it57160438`.`sticky_user` (USERNAME`, `PASSWORD`) VALUES ('" . $username . "', '" . md5($password) . "');";
             $this->executeQuery();
             return true;
         } else {
