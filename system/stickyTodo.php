@@ -1,6 +1,7 @@
 <?php
 session_start();
-class Database
+
+class StickyTodo
 {
     /*
      * Connection variables.
@@ -9,7 +10,6 @@ class Database
     private $db_user = "it57160438";
     private $db_password = "4K5m8eHj";
     private $db_database_select = "it57160438";
-    private $db_connection_string = null;
     private $link = null;
 
     /*
@@ -26,8 +26,8 @@ class Database
 
     function __construct()
     {
-        $this->db_connection_string = $this->db_host . "," . $this->db_user . "," . $this->db_password . "," . $this->db_database_select;
         $this->username = $_SESSION['username'];
+        $this->Open();
     }
 
     /*
@@ -36,11 +36,18 @@ class Database
 
     public function Open()
     {
-        $this->link = mysqli_connect($this->db_connection_string);
-        if (mysqli_error($this->link)) {
-            die("Connection failed: " . mysqli_error($this->link));
+        if (isset($this->link)) {
+            echo "Warning : You already connected to MySql.";
+        } else {
+            $this->link = mysqli_connect($this->db_host, $this->db_user, $this->db_password, $this->db_database_select);
+            if (mysqli_error($this->link)) {
+                die("Connection failed: " . mysqli_error($this->link));
+            }
+            return true;
         }
-        return true;
+        return false;
+
+
     }
 
     public function Close()
@@ -54,8 +61,6 @@ class Database
 
     private function executeQuery()
     {
-        $this->sql = mysqli_real_escape_string($this->link, $this->sql);
-
         if (mysqli_errno($this->link)) {
             echo "MySQL error " . mysqli_errno($this->link) . ": "
                 . mysqli_errno($this->link) . "\n<br>When executing <br>\n$this->sql\n<br>";
@@ -71,25 +76,32 @@ class Database
 
     public function select_all_from($table)
     {
+        $table = mysqli_real_escape_string($this->link,$table);
         $this->sql = "SELECT * FROM `" . $table . "`";
         $this->executeQuery();
     }
 
     public function select_where_one($field, $predict, $table)
     {
+        $predict = mysqli_real_escape_string($this->link,$predict);
+        $field = mysqli_real_escape_string($this->link,$field);
+        $table = mysqli_real_escape_string($this->link,$table);
+
         $predict_tmp = null;
         if (!is_numeric($predict)) {
             $predict_tmp = "'" . $predict . "'";
+        }else {
+            $predict_tmp = $predict;
         }
         $this->sql = "SELECT * FROM `" . $table . "` WHERE `" . $field . "` = " . $predict_tmp;
         $this->executeQuery();
     }
 
-    public function query_whatever($sql)
+    /*public function query_whatever($sql)
     {
         $this->sql = $sql;
         $this->executeQuery();
-    }
+    }*/
 
     /*
      * Todo topic.
@@ -98,12 +110,16 @@ class Database
 
     public function add_todo($topic, $due)
     {
+        $topic = mysqli_real_escape_string($this->link,$topic);
+        $due = mysqli_real_escape_string($this->link,$due);
         $this->sql = "INSERT INTO `it57160438`.`sticky_todo` (START`, `POST_BY`, `DUE`,  `TOPIC`) VALUES ('" . $this->username . "', '" . $due . "', '" . $topic . "');";
         $this->executeQuery();
     }
 
     public function status($id, $order)
     {
+        $id = mysqli_real_escape_string($this->link,$id);
+        $order = mysqli_real_escape_string($this->link,$order);
         $status = null;
         if ($order == "done") {
             $status = "1";
@@ -118,6 +134,8 @@ class Database
 
     public function visible($id, $order)
     {
+        $id = mysqli_real_escape_string($this->link,$id);
+        $order = mysqli_real_escape_string($this->link,$order);
         $visible = null;
         if ($order == "delete") {
             $visible = "1";
@@ -136,24 +154,29 @@ class Database
 
     public function signIn($username, $password, $stayLoggedIn)
     {
-        $password = md5($password);
-        $this->sql = "SELECT `sticky_user`.`USERNAME`, `sticky_user`.`PASSWORD` FROM `sticky_user` WHERE `sticky_user`.`USERNAME` = '".$username."' AND `sticky`.`PASSWORD` = '".$password."'";
+        $username = mysqli_real_escape_string($this->link,$username);
+        $password = mysqli_real_escape_string($this->link,$password);
+        $password = "dskeowiwekd" . (hash("sha256", $password) . "skKaoqi92#*3G93fc$^*S@@a2");
+        $this->sql = "SELECT `sticky_user`.`USERNAME`, `sticky_user`.`PASSWORD` FROM `sticky_user` WHERE `sticky_user`.`USERNAME` = '" . $username . "' AND `sticky_user`.`PASSWORD` = '" . $password . "'";
         $this->executeQuery();
-        if(mysqli_num_rows($this->result) == 1)
-        {
-            if($stayLoggedIn)
-            {
-                setcookie('username',$stayLoggedIn,time() + (86400 * 15), "/");
-                $_COOKIE['username'] = $stayLoggedIn;
+        if (mysqli_num_rows($this->result) == 1) {
+            if ($stayLoggedIn == "true") {
+                $this->username = mysqli_fetch_object($this->result)->USERNAME;
+                setcookie('username', $this->username, time() + (86400 * 15), "/");
+                $_COOKIE['username'] = $this->username;
+            }else {
+                $_SESSION['username'] = mysqli_fetch_object($this->result)->USERNAME;
             }
             return true;
         }
+        echo $this->sql;
         return false;
     }
-    
-    public function signOut(){
+
+    public function signOut()
+    {
         session_destroy();
-        setcookie('username',"",time() - 3600);
+        setcookie('username', "", time() - 3600);
     }
 
     /*
@@ -162,7 +185,9 @@ class Database
 
     public function edit_topic($id, $topic)
     {
-        $this->sql = "UPDATE `it57160438`.`sticky_todo` SET `sticky_todo`.`TOPIC` = '".$topic."' WHERE `sticky_todo`.`ID` = ".$id.";";
+        $id = mysqli_real_escape_string($this->link,$id);
+        $topic = mysqli_real_escape_string($this->link,$topic);
+        $this->sql = "UPDATE `it57160438`.`sticky_todo` SET `sticky_todo`.`TOPIC` = '" . $topic . "' WHERE `sticky_todo`.`ID` = " . $id . ";";
         $this->executeQuery();
     }
 
@@ -172,8 +197,10 @@ class Database
 
     public function add_user($username, $password)
     {
-        if (isset($username) AND isset($password)) {
-            $this->sql = "INSERT INTO `it57160438`.`sticky_user` (USERNAME`, `PASSWORD`) VALUES ('" . $username . "', '" . md5($password) . "');";
+        if (!empty($username) AND !empty($password)) {
+            $username = mysqli_real_escape_string($this->link,$username);
+            $password = mysqli_real_escape_string($this->link,$password);
+            $this->sql = "INSERT INTO `it57160438`.`sticky_user` (USERNAME`, `PASSWORD`) VALUES ('" . $username . "', '" . "dskeowiwekd" . (hash("sha256", $password) . "skKaoqi92#*3G93fc$^*S@@a2") . "');";
             $this->executeQuery();
             return true;
         } else {

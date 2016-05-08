@@ -4,28 +4,34 @@
     <h2 style="text-align: center">St<i class="fa fa-check" style="color:coral" aria-hidden="true"></i>cky</h2>
     <div class="panel panel-default">
         <div class="panel-body">
-            <form role="form">
+            <form role="form" id="sign-in-form">
                 <!--username-->
-                <div class="form-group">
-                    <label for="username">username:</label>
-                    <input type="text" class="form-control" id="username">
+                <div id="f_username" class="form-group">
+                    <label for="username">username:</label><span id="error_username"></span>
+                    <input type="text" class="form-control" id="username" placeholder="Your username">
                 </div>
                 <!--/username-->
                 <!--password-->
-                <div class="form-group">
-                    <label for="password">password:</label>
-                    <input type="password" class="form-control" id="password">
+                <div id= "f_password" class="form-group">
+                    <label for="password">password:</label><span id="error_password"></span>
+                    <input type="password" class="form-control" id="password" placeholder="Your password">
                 </div>
                 <!--/password-->
+                <!--Remember-->
+                <div class="form-group">
+                    <label for="remember" class="checkbox-inline"><input type="checkbox" value ="remember" id="remember">Remember me</label>
+                </div>
+                <!--/Remember-->
                 <!--Sign in button-->
                 <div class="form-group">
-                    <input type="submit" onsubmit="signIn()" class="form-control btn btn-warning" id="sign-in-btn"
+                    <input type="submit" class="form-control btn btn-warning" id="sign-in-btn"
                            value="Sign in">
                 </div>
                 <!--/Sign in button-->
             </form>
         </div>
     </div>
+    <div id="alert"></div>
 </div>
 <!--/Sign in form-->
 <div class="col-sm-3"></div><!--Makes Sign in panel center-->
