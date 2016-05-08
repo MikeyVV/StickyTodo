@@ -1,20 +1,30 @@
 <?php
 session_start();
-require ('database.php');
 if($_COOKIE['username'])$_SESSION['username'];
-$conn = new Database();
-
+if($_SESSION['username'])$signIn = true;
+else $signIn = false;
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sticky<?php ?></title>
+    <title>Sticky | 
+        <?php
+            if($_SESSION['username'])
+            {
+                echo "Todo";
+            } else
+            {
+                echo "Sign in";
+            }
+        ?>
+    </title>
     <?php
     echo file_get_contents("http://angsila.cs.buu.ac.th/~57160438/887371/Sticky/header/head.html");
     ?>
 </head>
 <body>
 <div class="container">
+    <?php if($signIn) { ?>
     <!--Sign in-->
     <div class="row">
         <div class="col-sm-3"></div><!--Makes Sign in panel center-->
@@ -49,6 +59,12 @@ $conn = new Database();
         <div class="col-sm-3"></div><!--Makes Sign in panel center-->
     </div>
     <!--/Sign in-->
+    <?php } else 
+    { ?>
+        <!--Todo app-->
+        
+        <!--/Todo app-->
+    <?php} ?>
 </div>
 </body>
 </html>

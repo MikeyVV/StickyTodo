@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 class Database
 {
     /*
@@ -143,11 +143,17 @@ class Database
         {
             if($stayLoggedIn)
             {
+                setcookie('username',$stayLoggedIn,time() + (86400 * 15), "/");
                 $_COOKIE['username'] = $stayLoggedIn;
             }
             return true;
         }
         return false;
+    }
+    
+    public function signOut(){
+        session_destroy();
+        setcookie('username',"",time() - 3600);
     }
 
     /*
