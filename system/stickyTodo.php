@@ -26,7 +26,7 @@ class StickyTodo
 
     function __construct()
     {
-        $this->username = $_SESSION['username'];
+        //$this->username = $_SESSION['username'];
         $this->Open();
     }
 
@@ -76,21 +76,21 @@ class StickyTodo
 
     public function select_all_from($table)
     {
-        $table = mysqli_real_escape_string($this->link,$table);
+        $table = mysqli_real_escape_string($this->link, $table);
         $this->sql = "SELECT * FROM `" . $table . "`";
         $this->executeQuery();
     }
 
     public function select_where_one($field, $predict, $table)
     {
-        $predict = mysqli_real_escape_string($this->link,$predict);
-        $field = mysqli_real_escape_string($this->link,$field);
-        $table = mysqli_real_escape_string($this->link,$table);
+        $predict = mysqli_real_escape_string($this->link, $predict);
+        $field = mysqli_real_escape_string($this->link, $field);
+        $table = mysqli_real_escape_string($this->link, $table);
 
         $predict_tmp = null;
         if (!is_numeric($predict)) {
             $predict_tmp = "'" . $predict . "'";
-        }else {
+        } else {
             $predict_tmp = $predict;
         }
         $this->sql = "SELECT * FROM `" . $table . "` WHERE `" . $field . "` = " . $predict_tmp;
@@ -110,16 +110,16 @@ class StickyTodo
 
     public function add_todo($topic, $due)
     {
-        $topic = mysqli_real_escape_string($this->link,$topic);
-        $due = mysqli_real_escape_string($this->link,$due);
+        $topic = mysqli_real_escape_string($this->link, $topic);
+        $due = mysqli_real_escape_string($this->link, $due);
         $this->sql = "INSERT INTO `it57160438`.`sticky_todo` (START`, `POST_BY`, `DUE`,  `TOPIC`) VALUES ('" . $this->username . "', '" . $due . "', '" . $topic . "');";
         $this->executeQuery();
     }
 
     public function status($id, $order)
     {
-        $id = mysqli_real_escape_string($this->link,$id);
-        $order = mysqli_real_escape_string($this->link,$order);
+        $id = mysqli_real_escape_string($this->link, $id);
+        $order = mysqli_real_escape_string($this->link, $order);
         $status = null;
         if ($order == "done") {
             $status = "1";
@@ -134,8 +134,8 @@ class StickyTodo
 
     public function visible($id, $order)
     {
-        $id = mysqli_real_escape_string($this->link,$id);
-        $order = mysqli_real_escape_string($this->link,$order);
+        $id = mysqli_real_escape_string($this->link, $id);
+        $order = mysqli_real_escape_string($this->link, $order);
         $visible = null;
         if ($order == "delete") {
             $visible = "1";
@@ -154,29 +154,25 @@ class StickyTodo
 
     public function signIn($username, $password, $stayLoggedIn)
     {
-        $username = mysqli_real_escape_string($this->link,$username);
-        $password = mysqli_real_escape_string($this->link,$password);
+        $username = mysqli_real_escape_string($this->link, $username);
+        $password = mysqli_real_escape_string($this->link, $password);
         $password = "dskeowiwekd" . (hash("sha256", $password) . "skKaoqi92#*3G93fc$^*S@@a2");
         $this->sql = "SELECT `sticky_user`.`USERNAME`, `sticky_user`.`PASSWORD` FROM `sticky_user` WHERE `sticky_user`.`USERNAME` = '" . $username . "' AND `sticky_user`.`PASSWORD` = '" . $password . "'";
         $this->executeQuery();
         if (mysqli_num_rows($this->result) == 1) {
-            if ($stayLoggedIn == "true") {
-                $this->username = mysqli_fetch_object($this->result)->USERNAME;
-                setcookie('username', $this->username, time() + (86400 * 15), "/");
-                $_COOKIE['username'] = $this->username;
-            }else {
-                $_SESSION['username'] = mysqli_fetch_object($this->result)->USERNAME;
-            }
+            $_SESSION['username'] = mysqli_fetch_object($this->result)->USERNAME;
+            if ($stayLoggedIn == "true")
+                setcookie('username', $_SESSION['username'], time() + (86400 * 15), "/");
             return true;
         }
-        echo $this->sql;
+        //echo $this->sql;
         return false;
     }
 
     public function signOut()
     {
+        setcookie('username', $_SESSION['username'], time() - 3600, '/');
         session_destroy();
-        setcookie('username', "", time() - 3600);
     }
 
     /*
@@ -185,8 +181,8 @@ class StickyTodo
 
     public function edit_topic($id, $topic)
     {
-        $id = mysqli_real_escape_string($this->link,$id);
-        $topic = mysqli_real_escape_string($this->link,$topic);
+        $id = mysqli_real_escape_string($this->link, $id);
+        $topic = mysqli_real_escape_string($this->link, $topic);
         $this->sql = "UPDATE `it57160438`.`sticky_todo` SET `sticky_todo`.`TOPIC` = '" . $topic . "' WHERE `sticky_todo`.`ID` = " . $id . ";";
         $this->executeQuery();
     }
@@ -198,8 +194,8 @@ class StickyTodo
     public function add_user($username, $password)
     {
         if (!empty($username) AND !empty($password)) {
-            $username = mysqli_real_escape_string($this->link,$username);
-            $password = mysqli_real_escape_string($this->link,$password);
+            $username = mysqli_real_escape_string($this->link, $username);
+            $password = mysqli_real_escape_string($this->link, $password);
             $this->sql = "INSERT INTO `it57160438`.`sticky_user` (USERNAME`, `PASSWORD`) VALUES ('" . $username . "', '" . "dskeowiwekd" . (hash("sha256", $password) . "skKaoqi92#*3G93fc$^*S@@a2") . "');";
             $this->executeQuery();
             return true;
