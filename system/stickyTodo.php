@@ -122,6 +122,13 @@ class StickyTodo
 
     public function get_todo()
     {
+        $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`POST_BY`='" . $_SESSION['username']."'";
+        //echo $this->sql;
+        $this->executeQuery();
+    }
+
+    public function get_undone()
+    {
         $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`POST_BY`='" . $_SESSION['username']."' AND `sticky_todo`.`STATUS`=0";
         //echo $this->sql;
         $this->executeQuery();
