@@ -42,9 +42,11 @@ $(document).ready(function () {
                 }
                 else {
                     if (data.error_username) {
+                        var alert1 = $("#alert1");
                         $("#f_username").addClass("has-error");
                         $("#error_username").html(" <i class=\"fa fa-exclamation\" style=\"color:red\" aria-hidden=\"true\"><\/i>");
-                        $("#alert1").replaceWith("<div id=\"alert1\" class=\"alert alert-danger\"><i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\"></i> " + data.error_username + "<\/div>");
+                        alert1.replaceWith("<div id=\"alert1\" style='display: none' class=\"alert alert-danger\"><i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\"></i> " + data.error_username + "<\/div>");
+                        alert1.fadeIn();
                     }else {
                         $("#error_username").html("");
                         $("#f_username").removeClass("has-error");
