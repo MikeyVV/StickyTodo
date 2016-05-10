@@ -26,7 +26,7 @@ class StickyTodo
 
     function __construct()
     {
-        //$this->username = $_SESSION['username'];
+        $this->username = $_SESSION['username'];
         $this->Open();
     }
 
@@ -122,20 +122,20 @@ class StickyTodo
 
     public function get_todo()
     {
-        $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`POST_BY`='" . $_SESSION['username']."'";
+        $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`POST_BY`='" . $this->username."'ORDER BY  `sticky_todo`.`LAST_MOD` ";
         //echo $this->sql;
         $this->executeQuery();
     }
 
     public function get_undone()
     {
-        $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`POST_BY`='" . $_SESSION['username']."' AND `sticky_todo`.`STATUS`=0";
+        $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`POST_BY`='" . $this->username."' AND `sticky_todo`.`STATUS`=0";
         //echo $this->sql;
         $this->executeQuery();
     }
     public function get_complete()
     {
-        $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`POST_BY`='" . $_SESSION['username']."' AND `sticky_todo`.`STATUS`=1";
+        $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`POST_BY`='" . $this->username."' AND `sticky_todo`.`STATUS`=1";
         //echo $this->sql;
         $this->executeQuery();
     }
@@ -151,11 +151,13 @@ class StickyTodo
      * $due = 0000-00-00 00:00:00
      */
 
-    public function add_todo($topic, $due)
+    public function add_todo($topic)
     {
         $topic = mysqli_real_escape_string($this->link, $topic);
-        $due = mysqli_real_escape_string($this->link, $due);
-        $this->sql = "INSERT INTO `it57160438`.`sticky_todo` (START`, `POST_BY`, `DUE`,  `TOPIC`) VALUES ('" . $this->username . "', '" . $due . "', '" . $topic . "');";
+        //$due = mysqli_real_escape_string($this->link, $due);
+        //$this->sql = "INSERT INTO `it57160438`.`sticky_todo` (START`, `POST_BY`, `DUE`, `TOPIC`, `LAST_MOD`) VALUES ('" . $this->username . "', '" . $due . "', '" . $topic . "',NOW());";
+        $this->sql = "INSERT INTO `it57160438`.`sticky_todo` (`POST_BY`, `TOPIC`, `LAST_MOD`) VALUES ('" . $this->username . "', '" . $topic . "',NOW());";
+        //echo $this->sql;
         $this->executeQuery();
     }
 
@@ -171,7 +173,7 @@ class StickyTodo
         } else {
             echo "your parameter is invalid.";
         }
-        $this->sql = "UPDATE `it57160438`.`sticky_todo` SET `STATUS` = '" . $status . "' WHERE `sticky_todo`.`ID` = " . $id . ";";
+        $this->sql = "UPDATE `it57160438`.`sticky_todo` SET `STATUS` = '" . $status . "',`LAST_MOD`=NOW() WHERE `sticky_todo`.`ID` = " . $id . ";";
         $this->executeQuery();
     }
 
@@ -226,7 +228,7 @@ class StickyTodo
     {
         $id = mysqli_real_escape_string($this->link, $id);
         $topic = mysqli_real_escape_string($this->link, $topic);
-        $this->sql = "UPDATE `it57160438`.`sticky_todo` SET `sticky_todo`.`TOPIC` = '" . $topic . "' WHERE `sticky_todo`.`ID` = " . $id . ";";
+        $this->sql = "UPDATE `it57160438`.`sticky_todo` SET `sticky_todo`.`TOPIC` = '" . $topic . "',`LAST_MOD`=NOW() WHERE `sticky_todo`.`ID` = " . $id . ";";
         $this->executeQuery();
     }
 
@@ -239,7 +241,7 @@ class StickyTodo
         if (!empty($username) AND !empty($password)) {
             $username = mysqli_real_escape_string($this->link, $username);
             $password = mysqli_real_escape_string($this->link, $password);
-            $this->sql = "INSERT INTO `it57160438`.`sticky_user` (USERNAME`, `PASSWORD`) VALUES ('" . $username . "', '" . "dskeowiwekd" . (hash("sha256", $password) . "skKaoqi92#*3G93fc$^*S@@a2") . "');";
+            $this->sql = "INSERT INTO `it57160438`.`sticky_user` (`USERNAME`, `PASSWORD`) VALUES ('" . $username . "', '" . "dskeowiwekd" . (hash("sha256", $password) . "skKaoqi92#*3G93fc$^*S@@a2") . "');";
             $this->executeQuery();
             return true;
         } else {

@@ -15,7 +15,7 @@ else $signIn = false; // 1 = true , other false
     echo file_get_contents("http://angsila.cs.buu.ac.th/~57160438/887371/Sticky/header/head.html");
     ?>
 </head>
-<body>
+<body class="sticky-app">
 <?= ($signIn) ? file_get_contents("partials/nav.html") : "" ?>
 <div class="container-fluid" style="margin-top: 10vh">
     <?php

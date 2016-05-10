@@ -1,4 +1,9 @@
 
+.sticky-app {
+    color: #5F5F5F;
+    background-color: #FBFBFB;
+}
+
 .remove-rad-nav {
     border-radius: 0;
 }
