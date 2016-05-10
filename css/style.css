@@ -1,0 +1,15 @@
+
+.remove-rad-nav {
+    border-radius: 0;
+}
+
+.add-todo {
+
+    margin-bottom: 0;
+}
+
+.todo-list {
+    height: 65vh;
+    overflow-y: auto;
+    border-top: 0;
+}

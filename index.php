@@ -16,21 +16,24 @@ else $signIn = false; // 1 = true , other false
     ?>
 </head>
 <body>
-<div class="container">
-    <div class="row" id="partial">
-        <?php
-        if ($signIn) {
-
-        } else {
-            echo file_get_contents("partials/signIn.html");
-        }
-        ?>
-    </div>
+<?= ($signIn) ? file_get_contents("partials/nav.html") : "" ?>
+<div class="container-fluid" style="margin-top: 10vh">
+    <?php
+    if ($signIn) {
+        echo file_get_contents("partials/todo.html");
+    } else {
+        echo file_get_contents("partials/signIn.html");
+    }
+    ?>
 </div>
-
-
 <script>
-    <?=($signIn) ? file_get_contents("script/todo.js") : file_get_contents("script/signin.js") ?>
+    <?php if ($signIn) {
+        echo "var username ='" . $_SESSION['username'] . "';\n";
+        echo file_get_contents("script/todo.js");
+    } else {
+        echo file_get_contents("script/signin.js");
+    }
+    ?>
 </script>
 </body>
 </html>

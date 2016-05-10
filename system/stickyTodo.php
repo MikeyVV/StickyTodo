@@ -21,7 +21,7 @@ class StickyTodo
      * Database query variables.
      */
     private $sql = null;
-    public $result = null;
+    private $result = null;
 
 
     function __construct()
@@ -59,8 +59,31 @@ class StickyTodo
      * Run SQL command to the database.
      */
 
+    public function getResult($mode)
+    {
+        if($mode == "object")
+        {
+            return mysqli_fetch_object($this->result);    
+        }
+        elseif($mode == "assoc")
+        {
+            return mysqli_fetch_assoc($this->result);
+        }
+        elseif ($mode == "array")
+        {
+            return mysqli_fetch_array($this->result);
+        }
+        return false;
+    }
+    
+    public function getNumRow()
+    {
+        return mysqli_num_rows($this->result);
+    }
+
     private function executeQuery()
     {
+        mysqli_query($this->link,"SET NAMES UTF8");
         if (mysqli_errno($this->link)) {
             echo "MySQL error " . mysqli_errno($this->link) . ": "
                 . mysqli_errno($this->link) . "\n<br>When executing <br>\n$this->sql\n<br>";
@@ -94,6 +117,19 @@ class StickyTodo
             $predict_tmp = $predict;
         }
         $this->sql = "SELECT * FROM `" . $table . "` WHERE `" . $field . "` = " . $predict_tmp;
+        $this->executeQuery();
+    }
+
+    public function get_todo()
+    {
+        $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`POST_BY`='" . $_SESSION['username']."' AND `sticky_todo`.`STATUS`=0";
+        //echo $this->sql;
+        $this->executeQuery();
+    }
+    public function get_complete()
+    {
+        $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`POST_BY`='" . $_SESSION['username']."' AND `sticky_todo`.`STATUS`=1";
+        //echo $this->sql;
         $this->executeQuery();
     }
 

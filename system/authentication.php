@@ -7,7 +7,6 @@ $mode = $_POST['mode'];
 
 
 $sticky = new StickyTodo();
-$sticky->signOut();
 
 if ($mode == "sign in") {
     if (!empty($username) AND !empty($password))
