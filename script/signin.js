@@ -32,21 +32,21 @@ $(document).ready(function () {
                     $("#error_password").html("");
                     if (data.status == "Sign in successfully.") {
                         $("#alert2").replaceWith("<div id=\"alert2\"><\/div>");
-                        $("#alert1").replaceWith("<div id=\"alert1\" class=\"alert alert-success\">" + data.status + "<\/div>");
+                        $("#alert1").replaceWith("<div id=\"alert1\" style='display: none' class=\"alert alert-success\">" + data.status + "<\/div>");
                         location.reload();
                     }
                     else {
                         $("#alert2").replaceWith("<div id=\"alert2\"><\/div>");
-                        $("#alert1").replaceWith("<div id=\"alert1\" class=\"alert alert-danger\"><i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\"></i> " + data.status + "<\/div>");
+                        $("#alert1").replaceWith("<div id=\"alert1\" style='display: none' class=\"alert alert-danger\"><i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\"></i> " + data.status + "<\/div>");
+                        $("#alert1").fadeIn();
                     }
                 }
                 else {
                     if (data.error_username) {
-                        var alert1 = $("#alert1");
                         $("#f_username").addClass("has-error");
                         $("#error_username").html(" <i class=\"fa fa-exclamation\" style=\"color:red\" aria-hidden=\"true\"><\/i>");
-                        alert1.replaceWith("<div id=\"alert1\" style='display: none' class=\"alert alert-danger\"><i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\"></i> " + data.error_username + "<\/div>");
-                        alert1.fadeIn();
+                        $("#alert1").replaceWith("<div id=\"alert1\" style='display: none' class=\"alert alert-danger\"><i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\"></i> " + data.error_username + "<\/div>");
+                        $("#alert1").fadeIn();
                     }else {
                         $("#error_username").html("");
                         $("#f_username").removeClass("has-error");
@@ -55,7 +55,8 @@ $(document).ready(function () {
                     if (data.error_password) {
                         $("#f_password").addClass("has-error");
                         $("#error_password").html(" <i class=\"fa fa-exclamation\" style=\"color:red\" aria-hidden=\"true\"><\/i>");
-                        $("#alert2").replaceWith("<div id=\"alert2\" class=\"alert alert-danger\"><i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\"></i> " + data.error_password + "<\/div>");
+                        $("#alert2").replaceWith("<div id=\"alert2\" style='display: none' class=\"alert alert-danger\"><i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\"></i> " + data.error_password + "<\/div>");
+                        $("#alert2").fadeIn();
                     }else {
                         $("#error_password").html("");
                         $("#f_password").removeClass("has-error");
@@ -71,4 +72,6 @@ $(document).ready(function () {
         event.preventDefault();
         signIn();
     });
+    
+    $("#guest-access").fadeIn();
 });

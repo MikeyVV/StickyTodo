@@ -23,7 +23,6 @@ function signOut() {
 
 function remove_list() {
     $(".todo-list-check").remove();
-
 }
 
 
