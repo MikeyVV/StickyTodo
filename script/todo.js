@@ -1,3 +1,14 @@
+String.prototype.hashCode = function() {
+    var hash = 0, i, chr, len;
+    if (this.length === 0) return hash;
+    for (i = 0, len = this.length; i < len; i++) {
+        chr   = this.charCodeAt(i);
+        hash  = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+};
+
 function checked_done(ele, todo_status) {
     $.post("system/checkDone.php",
         {
@@ -6,7 +17,7 @@ function checked_done(ele, todo_status) {
         },
         function (data, status) {
             if (status == "success") {
-                remove_list(ele);
+                move_list(ele);
             }
         }
     );
@@ -21,14 +32,10 @@ function signOut() {
     });
 }
 
-function remove_list(ele) {
-    $("#todo_" + $(ele).val()).remove();
-    add_list(ele)
-}
-
-function add_list(ele) {
+function move_list(ele) {
     var ele_id = $(ele).val();
     var ele_text = $(ele).parent().text();
+    $("#todo_" + ele_id).remove();
     if ($(ele).is(":checked")) {
         //add to complete
         $("#list_done").append("<a id='todo_" + ele_id + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label><input onclick=\"checked_done(this,'undone')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + ele_id + "' checked><del><i>" + ele_text + "</i></del><\/label><\/div><\/a>");
@@ -38,6 +45,16 @@ function add_list(ele) {
     }
 }
 
+function add_new_todo() {
+    $.get("system/getLastAdd.php", function (data, status) {
+        if (status == "success") {
+            var new_todo = JSON.parse(data).lists[0];
+            var new_todo_id = new_todo.ID;
+            var new_todo_topic = new_todo.TOPIC;
+            $("#list_undone").append("<a id='todo_" + new_todo_id + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label><input onclick=\"checked_done(this,'undone')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + new_todo_id + "'>" + new_todo_topic + "<\/label><\/div><\/a>");
+        }
+    });
+}
 
 (function get_todo() {
     $.get("system/getTodo.php", function (data, success) {
@@ -70,7 +87,7 @@ function addTodoToDatabase() {
             },
             function (data, status) {
                 if (status == "success") {
-                    remove_list();
+                    add_new_todo();
                 }
             }
         );
@@ -84,6 +101,9 @@ $("#write-todo-form").submit(function (e) {
     addTodoToDatabase();
     $("#topic_todo").val("");
 });
+
+alert("ABC".hashCode);
+
 //get_todo();
 
 

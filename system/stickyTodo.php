@@ -122,20 +122,27 @@ class StickyTodo
 
     public function get_todo()
     {
-        $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`POST_BY`='" . $this->username."'ORDER BY  `sticky_todo`.`LAST_MOD` ";
+        $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`POST_BY`='" . $this->username."' AND `sticky_todo`.`VISIBLE`=0 ORDER BY  `sticky_todo`.`LAST_MOD` ";
         //echo $this->sql;
         $this->executeQuery();
     }
 
     public function get_undone()
     {
-        $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`POST_BY`='" . $this->username."' AND `sticky_todo`.`STATUS`=0";
+        $this->sql = "SELECT * FROM `sticky_todo` WHERE (`sticky_todo`.`POST_BY`='" . $this->username."' AND `sticky_todo`.`STATUS`=0) AND `sticky_todo`.`VISIBLE`=0";
         //echo $this->sql;
         $this->executeQuery();
     }
     public function get_complete()
     {
-        $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`POST_BY`='" . $this->username."' AND `sticky_todo`.`STATUS`=1";
+        $this->sql = "SELECT * FROM `sticky_todo` WHERE (`sticky_todo`.`POST_BY`='" . $this->username."' AND `sticky_todo`.`STATUS`=1) AND `sticky_todo`.`VISIBLE`=0";
+        //echo $this->sql;
+        $this->executeQuery();
+    }
+
+    public function get_last_add()
+    {
+        $this->sql = "SELECT * FROM `sticky_todo` WHERE (`sticky_todo`.`POST_BY`= '".$this->username."' AND `sticky_todo`.`STATUS`=0) AND `sticky_todo`.`VISIBLE`=0 ORDER BY `sticky_todo`.`LAST_MOD` DESC LIMIT 1";
         //echo $this->sql;
         $this->executeQuery();
     }
@@ -229,6 +236,17 @@ class StickyTodo
         $id = mysqli_real_escape_string($this->link, $id);
         $topic = mysqli_real_escape_string($this->link, $topic);
         $this->sql = "UPDATE `it57160438`.`sticky_todo` SET `sticky_todo`.`TOPIC` = '" . $topic . "',`LAST_MOD`=NOW() WHERE `sticky_todo`.`ID` = " . $id . ";";
+        $this->executeQuery();
+    }
+
+    /*
+     * search todo topic
+     */
+
+    public function search_topic($topic)
+    {
+        $topic = mysqli_real_escape_string($this->link, $topic);
+        $this->sql ="SELECT *  FROM `sticky_todo` WHERE (`POST_BY` = '".$this->username."' AND `TOPIC` LIKE '%".$topic."%' ) AND `VISIBLE` = 0 ORDER BY  `sticky_todo`.`LAST_MOD`";
         $this->executeQuery();
     }
 
