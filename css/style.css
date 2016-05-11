@@ -1,4 +1,11 @@
 
+/*
+override bootstrap
+*/
+
+
+/*===============================================*/
+
 .sticky-app {
     color: #5F5F5F;
     background-color: #FBFBFB;
@@ -25,13 +32,15 @@
     border-radius: 0 !important;
 }
 
-.label-todo-list {
-    width: 100%;
+.label-check-list {
+    display:inline;
+}
+
+.label-todo-list{
+
 }
 
 .editable_todo_list {
-    display: block;
-    width: 100%;
     font-size: 14px;
     background-color: transparent;
     color: #555;
@@ -40,6 +49,7 @@
     -webkit-transition: 0.5s;
     transition: 0.5s;
 }
+
 
 input[type=text]:focus.editable_todo_list {
     border-bottom: 1px solid coral;

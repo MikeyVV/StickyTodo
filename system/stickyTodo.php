@@ -235,7 +235,7 @@ class StickyTodo
     {
         $id = mysqli_real_escape_string($this->link, $id);
         $topic = mysqli_real_escape_string($this->link, $topic);
-        $this->sql = "UPDATE `it57160438`.`sticky_todo` SET `sticky_todo`.`TOPIC` = '" . $topic . "',`LAST_MOD`=NOW() WHERE `sticky_todo`.`ID` = " . $id . ";";
+        $this->sql = "UPDATE `it57160438`.`sticky_todo` SET `sticky_todo`.`TOPIC` = '" . $topic . "' WHERE `sticky_todo`.`ID` = " . $id . ";";
         echo $this->sql;
         $this->executeQuery();
     }
