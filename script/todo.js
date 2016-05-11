@@ -1,13 +1,12 @@
-String.prototype.hashCode = function() {
-    var hash = 0, i, chr, len;
-    if (this.length === 0) return hash;
-    for (i = 0, len = this.length; i < len; i++) {
-        chr   = this.charCodeAt(i);
-        hash  = ((hash << 5) - hash) + chr;
-        hash |= 0; // Convert to 32bit integer
-    }
-    return hash;
-};
+/*
+ Variable
+ */
+
+var old_topic = "";
+
+/*
+ function
+ */
 
 function checked_done(ele, todo_status) {
     $.post("system/checkDone.php",
@@ -32,6 +31,10 @@ function signOut() {
     });
 }
 
+function clear_list() {
+    $(".todo-list-check").remove();
+}
+
 function move_list(ele) {
     var ele_id = $(ele).val();
     var ele_text = $(ele).parent().text();
@@ -41,7 +44,7 @@ function move_list(ele) {
         $("#list_done").append("<a id='todo_" + ele_id + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label><input onclick=\"checked_done(this,'undone')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + ele_id + "' checked><del><i>" + ele_text + "</i></del><\/label><\/div><\/a>");
     } else {
         //add to undone
-        $("#list_undone").append("<a id='todo_" + ele_id + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label><input onclick=\"checked_done(this,'done')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + ele_id + "'>" + ele_text + "<\/label><\/div><\/a>");
+        $("#list_undone").append("<a id='todo_" + ele_id + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label><input onclick=\"checked_done(this,'done')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + ele_id + "'><input id=\"a_todo_list_"+ele_id+"\" class=\"editable_todo_list\" type=\"text\" value=\""+ele_text+"\"><\/label><\/div><\/a>");
     }
 }
 
@@ -51,19 +54,19 @@ function add_new_todo() {
             var new_todo = JSON.parse(data).lists[0];
             var new_todo_id = new_todo.ID;
             var new_todo_topic = new_todo.TOPIC;
-            $("#list_undone").append("<a id='todo_" + new_todo_id + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label><input onclick=\"checked_done(this,'undone')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + new_todo_id + "'>" + new_todo_topic + "<\/label><\/div><\/a>");
+            $("#list_undone").append("<a id='todo_" + new_todo_id + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label><input onclick=\"checked_done(this,'undone')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + new_todo_id + "'><input id=\"a_todo_list_"+new_todo_id+"\" class=\"editable_todo_list\" type=\"text\" value=\""+new_todo_topic+"\"><\/label><\/div><\/a>");
         }
     });
 }
 
 (function get_todo() {
-    $.get("system/getTodo.php", function (data, success) {
+    $.post("system/getTodo.php",{}, function (data, success) {
         var todoLists = JSON.parse(data);
         var call_done = true;
         for (var undone_item = 0; undone_item < todoLists.lists.length; undone_item++) {
             if (undone_item == todoLists.lists.length - 1)call_done = true;
             if (todoLists.lists[undone_item].STATUS == 0) {
-                $("#list_undone").append("<a id='todo_" + todoLists.lists[undone_item].ID + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label><input onclick=\"checked_done(this,'done')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + todoLists.lists[undone_item].ID + "'>" + todoLists.lists[undone_item].TOPIC + "<\/label><\/div><\/a>");
+                $("#list_undone").append("<a id='todo_" + todoLists.lists[undone_item].ID + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label><input onclick=\"checked_done(this,'done')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + todoLists.lists[undone_item].ID + "'><input id=\"a_todo_list_"+todoLists.lists[undone_item].ID+"\" class=\"editable_todo_list\" type=\"text\" value=\""+todoLists.lists[undone_item].TOPIC+"\"><\/label><\/div><\/a>");
             }
 
         }
@@ -102,7 +105,41 @@ $("#write-todo-form").submit(function (e) {
     $("#topic_todo").val("");
 });
 
-alert("ABC".hashCode);
+function wathTopicTodo() {
+    var new_topic = $("#topic_todo").val();
+    if (old_topic != new_topic) {
+        old_topic = new_topic;
+        $.post(
+            "system/getTodo.php",
+            {
+                mode: "find",
+                topic: new_topic
+            },
+            function(data,success)
+            {
+                clear_list();
+                var todoLists = JSON.parse(data);
+                var call_done = true;
+                for (var undone_item = 0; undone_item < todoLists.lists.length; undone_item++) {
+                    if (undone_item == todoLists.lists.length - 1)call_done = true;
+                    if (todoLists.lists[undone_item].STATUS == 0) {
+                        $("#list_undone").append("<a id='todo_" + todoLists.lists[undone_item].ID + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label><input onclick=\"checked_done(this,'done')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + todoLists.lists[undone_item].ID + "'><input id=\"a_todo_list_"+todoLists.lists[undone_item].ID+"\" class=\"editable_todo_list\" type=\"text\" value=\""+todoLists.lists[undone_item].TOPIC+"\"><\/label><\/div><\/a>");
+                    }
+
+                }
+                if (call_done) {
+                    for (var done_item = 0; done_item < todoLists.lists.length; done_item++) {
+                        if (todoLists.lists[done_item].STATUS == 1) {
+                            $("#list_done").append("<a id='todo_" + todoLists.lists[done_item].ID + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label><input onclick=\"checked_done(this,'undone')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + todoLists.lists[done_item].ID + "' checked><del><i>" + todoLists.lists[done_item].TOPIC + "</i></del><\/label><\/div><\/a>");
+                        }
+                    }
+                }
+            }
+        );
+    }
+}
+
+setInterval(wathTopicTodo, 1000);
 
 //get_todo();
 
