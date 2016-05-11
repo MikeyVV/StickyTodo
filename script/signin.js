@@ -32,7 +32,7 @@ $(document).ready(function () {
                     $("#error_password").html("");
                     if (data.status == "Sign in successfully.") {
                         $("#alert2").replaceWith("<div id=\"alert2\"><\/div>");
-                        $("#alert1").replaceWith("<div id=\"alert1\" style='display: none' class=\"alert alert-success\">" + data.status + "<\/div>");
+                        $("#alert1").replaceWith("<div id=\"alert1\" class=\"alert alert-success\">" + data.status + "<\/div>");
                         location.reload();
                     }
                     else {
