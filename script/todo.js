@@ -47,7 +47,7 @@ function move_list(ele) {
         $("#list_done").append("<a id='todo_" + ele_id + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label><input onclick=\"checked_done(this,'undone')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + ele_id + "' checked><del><i>" + ele_text + "</i></del><\/label><\/div><\/a>");
     } else {
         //add to undone
-        $("#list_undone").append("<a id='todo_" + ele_id + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label class=\"label-todo-list\"><input onclick=\"checked_done(this,'done')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + ele_id + "'><input id=\"a_todo_list_" + ele_id + "\" class=\"editable_todo_list\" onfocus=\"edit_list(this);\" type=\"text\" value=\"" + ele_text + "\"><\/label><\/div><\/a>");
+        $("#list_undone").append("<a id='todo_" + ele_id + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label class=\"label-todo-list\"><input onclick=\"checked_done(this,'done')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + ele_id + "'><input id=\"a_todo_list_" + ele_id + "\" data-todo-list-id='" + ele_id + "' class=\"editable_todo_list\" onfocus=\"edit_list(this);\" type=\"text\" value=\"" + ele_text + "\"><\/label><\/div><\/a>");
     }
 }
 
@@ -57,7 +57,7 @@ function add_new_todo() {
             var new_todo = JSON.parse(data).lists[0];
             var new_todo_id = new_todo.ID;
             var new_todo_topic = new_todo.TOPIC;
-            $("#list_undone").append("<a id='todo_" + new_todo_id + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label class=\"label-todo-list\"><input onclick=\"checked_done(this,'undone')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + new_todo_id + "'><input id=\"a_todo_list_" + new_todo_id + "\" class=\"editable_todo_list\" onfocus=\"edit_list(this);\" type=\"text\" value=\"" + new_todo_topic + "\"><\/label><\/div><\/a>");
+            $("#list_undone").append("<a id='todo_" + new_todo_id + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label class=\"label-todo-list\"><input onclick=\"checked_done(this,'undone')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + new_todo_id + "'><input id=\"a_todo_list_" + new_todo_id + "\" data-todo-list-id='" + new_todo_id + "' class=\"editable_todo_list\" onfocus=\"edit_list(this);\" type=\"text\" value=\"" + new_todo_topic + "\"><\/label><\/div><\/a>");
         }
     });
 }
@@ -69,7 +69,7 @@ function add_new_todo() {
         for (var undone_item = 0; undone_item < todoLists.lists.length; undone_item++) {
             if (undone_item == todoLists.lists.length - 1)call_done = true;
             if (todoLists.lists[undone_item].STATUS == 0) {
-                $("#list_undone").append("<a id='todo_" + todoLists.lists[undone_item].ID + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label class=\"label-todo-list\"><input onclick=\"checked_done(this,'done')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + todoLists.lists[undone_item].ID + "'><input id=\"a_todo_list_" + todoLists.lists[undone_item].ID + "\" class=\"editable_todo_list\" onfocus=\"edit_list(this);\" type=\"text\" value=\"" + todoLists.lists[undone_item].TOPIC + "\"><\/label><\/div><\/a>");
+                $("#list_undone").append("<a id='todo_" + todoLists.lists[undone_item].ID + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label class=\"label-todo-list\"><input onclick=\"checked_done(this,'done')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + todoLists.lists[undone_item].ID + "'><input id=\"a_todo_list_" + todoLists.lists[undone_item].ID + "\" data-todo-list-id='" + todoLists.lists[undone_item].ID + "' class=\"editable_todo_list\" onfocus=\"edit_list(this);\" type=\"text\" value=\"" + todoLists.lists[undone_item].TOPIC + "\"><\/label><\/div><\/a>");
             }
 
         }
@@ -125,7 +125,7 @@ function wathTopicTodo() {
                 for (var undone_item = 0; undone_item < todoLists.lists.length; undone_item++) {
                     if (undone_item == todoLists.lists.length - 1)call_done = true;
                     if (todoLists.lists[undone_item].STATUS == 0) {
-                        $("#list_undone").append("<a id='todo_" + todoLists.lists[undone_item].ID + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label class=\"label-todo-list\"><input onclick=\"checked_done(this,'done')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + todoLists.lists[undone_item].ID + "'><input id=\"a_todo_list_" + todoLists.lists[undone_item].ID + "\" class=\"editable_todo_list\" onfocus=\"edit_list(this);\" type=\"text\" value=\"" + todoLists.lists[undone_item].TOPIC + "\"><\/label><\/div><\/a>");
+                        $("#list_undone").append("<a id='todo_" + todoLists.lists[undone_item].ID + "' class=\"todo-list-check list-group-item\"><div class='checkbox'><label class=\"label-todo-list\"><input onclick=\"checked_done(this,'done')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + todoLists.lists[undone_item].ID + "'><input id=\"a_todo_list_" + todoLists.lists[undone_item].ID + "\" data-todo-list-id='" + todoLists.lists[undone_item].ID + "' class=\"editable_todo_list\" onfocus=\"edit_list(this);\" type=\"text\" value=\"" + todoLists.lists[undone_item].TOPIC + "\"><\/label><\/div><\/a>");
                     }
 
                 }
@@ -151,7 +151,7 @@ function edit_list(ele) {
         clearInterval(watchingEditableTodo);
     });
     var old_list = ele.value;
-    var id_list = ele.id.charAt(ele.id.length - 1);
+    var id_list = $("#"+ele.id).attr("data-todo-list-id");
 
     function wathEditableTodo() {
         if (old_list != ele.value) {
@@ -163,6 +163,8 @@ function edit_list(ele) {
                 function (data, status) {
                     if (status == "success") {
                         old_list = ele.value;
+                    }else {
+                        console.log("Somethings wrong.");
                     }
                 }
             );
