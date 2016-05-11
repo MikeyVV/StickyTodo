@@ -154,20 +154,19 @@ function edit_list(ele) {
     var id_list = ele.id.charAt(ele.id.length - 1);
 
     function wathEditableTodo() {
-        if (old_list != $(ele).val()) {
+        if (old_list != ele.value) {
             $.post("system/editList.php",
                 {
-                    id: old_list,
+                    id: id_list,
                     topic: ele.value
                 },
                 function (data, status) {
                     if (status == "success") {
-                        old_list = ele.val;
+                        old_list = ele.value;
                     }
                 }
             );
         }
-        //console.log("call");
     }
 
     var watchingEditableTodo = setInterval(wathEditableTodo, 500);
