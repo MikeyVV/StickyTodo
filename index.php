@@ -17,7 +17,7 @@ else $signIn = false; // 1 = true , other false
 </head>
 <body class="sticky-app">
 <?= ($signIn) ? file_get_contents("partials/nav.html") : "" ?>
-<div class="container-fluid" style="margin-top: 10vh">
+<div id="partial" class="container-fluid" style="margin-top: 10vh">
     <?php
     if ($signIn) {
         echo file_get_contents("partials/todo.html");

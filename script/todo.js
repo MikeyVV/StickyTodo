@@ -44,10 +44,10 @@ function move_list(ele) {
     $("#todo_" + ele_id).remove();
     if ($(ele).is(":checked")) {
         //add to complete
-        $("#list_done").append("<a id='todo_" + ele_id + "' data-todo-list-id='" + ele_id + "' class=\"todo-list-check list-group-item\"><div class='checkbox' onmouseover=\"showDeleteSign(this)\"><label><input onclick=\"checked_done(this,'undone')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + ele_id + "' checked><del><i>" + ele_text + "</i></del><\/label><i id=\"del_" + ele_id + "\" onclick='deleteTopic(this)' class=\"fa fa-times-circle pull-right\" style=\"display:none;font-size: x-large;\" data-todo-list-id='" + ele_id + "' aria-hidden=\"true\"></i><\/div><\/a>");
+        $("#list_done").append("<a id='todo_" + ele_id + "' data-todo-list-id='" + ele_id + "' class=\"todo-list-check list-group-item\" onmouseover=\"showDeleteSign(this)\"><div class='checkbox'><label><input onclick=\"checked_done(this,'undone')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + ele_id + "' checked><del><i>" + ele_text + "</i></del><\/label><i id=\"del_" + ele_id + "\" onclick='deleteTopic(this)' class=\"fa fa-times-circle pull-right\" style=\"display:none;font-size: x-large;\" data-todo-list-id='" + ele_id + "' aria-hidden=\"true\"></i><\/div><\/a>");
     } else {
         //add to undone
-        $("#list_undone").append("<a id='todo_" + ele_id + "' data-todo-list-id='" + ele_id + "' class=\"todo-list-check list-group-item\"><div class='checkbox' onmouseover=\"showDeleteSign(this)\"><label class=\"label-check-list\"><input onclick=\"checked_done(this,'done')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + ele_id + "'></label><label><input id=\"a_todo_list_" + ele_id + "\" data-todo-list-id='" + ele_id + "' class=\"editable_todo_list\" onfocus=\"edit_list(this);\" type=\"text\" value=\"" + ele_text + "\"><\/label><i id=\"del_" + ele_id + "\" onclick='deleteTopic(this)' class=\"fa fa-times-circle pull-right\" style=\"display:none;font-size: x-large;\" data-todo-list-id='" + ele_id + "' aria-hidden=\"true\"></i><\/div><\/a>");
+        $("#list_undone").append("<a id='todo_" + ele_id + "' data-todo-list-id='" + ele_id + "' class=\"todo-list-check list-group-item\" onmouseover=\"showDeleteSign(this)\"><div class='checkbox'><label class=\"label-check-list\"><input onclick=\"checked_done(this,'done')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + ele_id + "'></label><label><input id=\"a_todo_list_" + ele_id + "\" data-todo-list-id='" + ele_id + "' class=\"editable_todo_list\" onfocus=\"edit_list(this);\" type=\"text\" value=\"" + ele_text + "\"><\/label><i id=\"del_" + ele_id + "\" onclick='deleteTopic(this)' class=\"fa fa-times-circle pull-right\" style=\"display:none;font-size: x-large;\" data-todo-list-id='" + ele_id + "' aria-hidden=\"true\"></i><\/div><\/a>");
     }
 }
 
@@ -57,7 +57,7 @@ function add_new_todo() {
             var new_todo = JSON.parse(data).lists[0];
             var new_todo_id = new_todo.ID;
             var new_todo_topic = new_todo.TOPIC;
-            $("#list_undone").append("<a id='todo_" + new_todo_id + "' data-todo-list-id='" + new_todo_id + "' class=\"todo-list-check list-group-item\"><div class='checkbox' onmouseover=\"showDeleteSign(this)\"><label class=\"label-check-list\"><input onclick=\"checked_done(this,'undone')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + new_todo_id + "'></label><label><input id=\"a_todo_list_" + new_todo_id + "\" data-todo-list-id='" + new_todo_id + "' class=\"editable_todo_list\" onfocus=\"edit_list(this);\" type=\"text\" value=\"" + new_todo_topic + "\"><\/label><i id=\"del_" + new_todo_id + "\" onclick='deleteTopic(this)' class=\"fa fa-times-circle pull-right\" style=\"display:none;font-size: x-large;\" data-todo-list-id='" + new_todo_id + "' aria-hidden=\"true\"></i><\/div><\/a>");
+            $("#list_undone").append("<a id='todo_" + new_todo_id + "' data-todo-list-id='" + new_todo_id + "' class=\"todo-list-check list-group-item\" onmouseover=\"showDeleteSign(this)\"><div class='checkbox'><label class=\"label-check-list\"><input onclick=\"checked_done(this,'undone')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + new_todo_id + "'></label><label><input id=\"a_todo_list_" + new_todo_id + "\" data-todo-list-id='" + new_todo_id + "' class=\"editable_todo_list\" onfocus=\"edit_list(this);\" type=\"text\" value=\"" + new_todo_topic + "\"><\/label><i id=\"del_" + new_todo_id + "\" onclick='deleteTopic(this)' class=\"fa fa-times-circle pull-right\" style=\"display:none;font-size: x-large;\" data-todo-list-id='" + new_todo_id + "' aria-hidden=\"true\"></i><\/div><\/a>");
         }
     });
 }
@@ -117,10 +117,8 @@ function deleteTopic(ele) {
             id: $(ele).attr("data-todo-list-id"),
             mode: "delete"
         },
-        function(data,status)
-        {
-            if(status == "success")
-            {
+        function (data, status) {
+            if (status == "success") {
                 $(del_list_id).remove();
             }
         }
