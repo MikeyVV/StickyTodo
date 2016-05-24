@@ -81,7 +81,6 @@ $(document).ready(function () {
 
     /* class SignUp */
     function SignUp() {
-        this.isPasswordMatch = false;
         this.showSignUpPage = function () {
             $("title").html("Sticky | Sign up");
             $("#signin-partial").css("display", "none");
@@ -93,6 +92,14 @@ $(document).ready(function () {
             $("#signup-partial").css("display", "none");
         };
         this.checkForm = function () {
+            if($("#username_signup").val().length == 0){
+                $("#error_username_signup").html("&nbsp;<i class=\"fa fa-times\" aria-hidden=\"true\"></i>&nbsp;fill your username.");
+            }
+            if($("#password_signup").val().length == 0){
+                $("#error_password_signup").html("&nbsp;<i class=\"fa fa-times\" aria-hidden=\"true\"></i>&nbsp;fill your password.");
+            } else {
+                $("#error_password_signup").html("")
+            }
             return ($("#username_signup").val().length > 0 && $("#password_signup").val().length > 0) && ($("#repeat_password_signup").val().length > 0);
         };
         this.SignUpAuthen = function () {
@@ -106,8 +113,11 @@ $(document).ready(function () {
                 },
                 function (data) {
                     if (data == 13) {
-                        $("#alert1_signup").replaceWith("<div id=\"alert1_signup\" style='display: none' class=\"alert alert-danger\"><i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\"></i> please check your username and password.<\/div>");
-                    } else $("#alert1_signup").empty();
+                        $("#alert1_signup").replaceWith("<div id=\"alert1_signup\" class=\"alert alert-danger\"><i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\"></i> please check your username and password.<\/div>");
+                    } else {
+                        $("#alert1_signup").replaceWith("Sign up Successfully please wait...");
+                        location.reload();
+                    }
                 }
             );
         };
@@ -195,7 +205,7 @@ $(document).ready(function () {
 
             } else {
                 $("#error_repeat_password_signup").html("");
-                
+
             }
         }
 
@@ -205,10 +215,10 @@ $(document).ready(function () {
         if ($("#repeat_password_signup").val().length > 0) {
             if ($(this).val() != $("#repeat_password_signup").val()) {
                 $("#error_repeat_password_signup").html("&nbsp;<i class=\"fa fa-times\" aria-hidden=\"true\"></i>&nbsp;your password is not match.");
-                
+
             } else {
                 $("#error_repeat_password_signup").html("");
-                
+
             }
         }
 
@@ -221,7 +231,7 @@ $(document).ready(function () {
     $("#sign-up-form").submit(function (e) {
         e.preventDefault();
         if (signUpPage.checkForm()) {
-                signUpPage.signInAuthen();
+            signUpPage.SignUpAuthen();
         }
     });
 

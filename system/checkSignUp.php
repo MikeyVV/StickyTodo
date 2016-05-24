@@ -10,5 +10,6 @@ if ($mode == "check username") {
     $password = $_POST['password'];
     if ($sticky->getNumRow() == 0) {
         $sticky->add_user($username, $password);
+        $sticky->signIn($username, $password, null);
     } else echo 13;
 }
