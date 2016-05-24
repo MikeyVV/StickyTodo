@@ -80,8 +80,7 @@ $(document).ready(function () {
      */
 
     /* class SignUp */
-    /*function SignUp() {
-        this.isUsernameUsed = false;
+    function SignUp() {
         this.isPasswordMatch = false;
         this.showSignUpPage = function () {
             $("title").html("Sticky | Sign up");
@@ -94,9 +93,7 @@ $(document).ready(function () {
             $("#signup-partial").css("display", "none");
         };
         this.checkForm = function () {
-            var valid = ($("#username_signup").val().length > 0 && $("#password_signup").val().length > 0) && ($("#repeat_password_signup").val().length > 0 && !this.isUsernameUsed) && this.isPasswordMatch;
-            $("#sign-up-btn").prop("disabled", !valid);
-            return valid;
+            return ($("#username_signup").val().length > 0 && $("#password_signup").val().length > 0) && ($("#repeat_password_signup").val().length > 0);
         };
         this.SignUpAuthen = function () {
             $.post
@@ -109,12 +106,12 @@ $(document).ready(function () {
                 },
                 function (data) {
                     if (data == 13) {
-                        $("#alert1_signup").replaceWith("<div id=\"alert1_signup\" style='display: none' class=\"alert alert-danger\"><i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\"></i> there is something wrong.<\/div>");
+                        $("#alert1_signup").replaceWith("<div id=\"alert1_signup\" style='display: none' class=\"alert alert-danger\"><i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\"></i> please check your username and password.<\/div>");
                     } else $("#alert1_signup").empty();
                 }
             );
-        }
-    }*/
+        };
+    }
 
     /* end of class SignUp */
 
@@ -122,30 +119,29 @@ $(document).ready(function () {
      Create object from SignUp's class
      */
 
-    //var signUpPage = new SignUp();
+    var signUpPage = new SignUp();
 
     /*
      switch page
      */
-
-    /*$("#signup-link").click(function (e) {
+    $("#signup-link").click(function (e) {
         e.preventDefault();
         signUpPage.showSignUpPage();
     });
     $("#signin-link").click(function (e) {
         e.preventDefault();
         signUpPage.showSignInPage();
-    });*/
+    });
 
     /*
      check empty form
      */
 
-    /*$("#username_signup").blur(function () {
+    $("#username_signup").blur(function () {
         if ($("#username_signup").val().length == 0) {
             $("#error_username_signup").html("&nbsp;<i class=\"fa fa-times\" aria-hidden=\"true\"></i>&nbsp;fill your username.");
         }
-        signUpPage.checkForm();
+
     });
 
     $("#password_signup").blur(function () {
@@ -154,21 +150,21 @@ $(document).ready(function () {
         } else {
             $("#error_password_signup").html("")
         }
-        signUpPage.checkForm();
+
     });
 
     $("#repeat_password_signup").blur(function () {
         if ($("#repeat_password_signup").val().length == 0) {
             $("#error_repeat_password_signup").html("&nbsp;<i class=\"fa fa-times\" aria-hidden=\"true\"></i>&nbsp;repeat your password.");
         }
-        signUpPage.checkForm();
-    });*/
+
+    });
 
     /*
      check username
      */
 
-    /*$("#username_signup").change(function () {
+    $("#username_signup").change(function () {
         if ($(this).val().length > 0) {
             $.post
             (
@@ -182,52 +178,52 @@ $(document).ready(function () {
                         signUpPage.isUsernameUsed = (data == "&nbsp;<i class=\"fa fa-times\" aria-hidden=\"true\"></i>&nbsp;this username is already in used.");
                         $("#error_username_signup").html(data);
                     }
-                    signUpPage.checkForm();
+
                 }
             );
         }
-    });*/
+    });
 
     /*
      check password
      */
 
-    /*$("#repeat_password_signup").change(function () {
+    $("#repeat_password_signup").change(function () {
         if ($(this).val().length > 0) {
             if ($(this).val() != $("#password_signup").val()) {
                 $("#error_repeat_password_signup").html("&nbsp;<i class=\"fa fa-times\" aria-hidden=\"true\"></i>&nbsp;your password is not match.");
-                this.isPasswordMatch = false;
+
             } else {
                 $("#error_repeat_password_signup").html("");
-                this.isPasswordMatch = true;
+                
             }
         }
-        signUpPage.checkForm();
+
     });
 
     $("#password_signup").change(function () {
         if ($("#repeat_password_signup").val().length > 0) {
             if ($(this).val() != $("#repeat_password_signup").val()) {
                 $("#error_repeat_password_signup").html("&nbsp;<i class=\"fa fa-times\" aria-hidden=\"true\"></i>&nbsp;your password is not match.");
-                this.isPasswordMatch = false;
+                
             } else {
                 $("#error_repeat_password_signup").html("");
-                this.isPasswordMatch = true;
+                
             }
         }
-        signUpPage.checkForm();
-    });*/
+
+    });
 
     /*
      Sign up form submit
      */
 
-    /*$("#sign-up-form").submit(function (e) {
+    $("#sign-up-form").submit(function (e) {
         e.preventDefault();
         if (signUpPage.checkForm()) {
-            signUpPage.SignUpAuthen();
+                signUpPage.signInAuthen();
         }
-    });*/
+    });
 
 })
 ;
