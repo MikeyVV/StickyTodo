@@ -109,6 +109,7 @@ $(document).ready(function () {
                 {
                     username: $("#username_signup").val(),
                     password: $("#password_signup").val(),
+                    repeatPassword: $("#repeat_password_signup").val(),
                     mode: "sign up authentication"
                 },
                 function (data) {
