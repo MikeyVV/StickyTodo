@@ -83,6 +83,17 @@ function add_new_todo() {
     });
 })();
 
+(function get_lists() {
+    $.get("system/getLists.php", function (data, status) {
+        if (status == "success") {
+            var lists = JSON.parse(data);
+            for (var item = 0; item < lists.lists.length; item++) {
+                $("#list").append("<li><a data-toggle='tab' href='#'>" + lists.lists[item].list_name + "</a></li>");
+            }
+        }
+    });
+})();
+
 function addTodoToDatabase() {
     var todo_topic = $("#topic_todo");
     if (todo_topic.val().length > 0) {

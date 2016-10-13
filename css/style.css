@@ -20,6 +20,37 @@ override bootstrap
     margin-bottom: 0;
 }
 
+.add-list-button {
+    background-color: #2f2f2f;
+}
+
+.my-lists {
+    padding-right: 0;
+}
+
+/*
+Modify from original bootstrap
+*/
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
+    color: #fff;
+    background-color: #757575;
+}
+
+.nav-pills > li > a {
+    border-radius: 0;
+    color: #a0a0a0;
+}
+
+.nav > li > a:focus, .nav > li > a:hover {
+    text-decoration: none;
+    /*background-color: #e43e3e;*/
+}
+
+/*
+end Modify from original bootstrap
+*/
+
 .todo-list {
     height: 65vh;
     overflow-y: auto;

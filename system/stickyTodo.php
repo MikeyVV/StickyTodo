@@ -120,6 +120,12 @@ class StickyTodo
         $this->executeQuery();
     }
 
+    public function get_lists()
+    {
+        $this->sql = "select distinct `sticky_lists`.`list_number`, `sticky_lists`.`list_name` from `sticky_lists` natural join `sticky_todo` where `sticky_lists`.`list_owner` = '" . $this->username . "' and `sticky_todo`.`VISIBLE` = 0";
+        $this->executeQuery();
+    }
+
     public function get_todo()
     {
         $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`POST_BY`='" . $this->username."' AND `sticky_todo`.`VISIBLE`=0 ORDER BY  `sticky_todo`.`LAST_MOD` ";

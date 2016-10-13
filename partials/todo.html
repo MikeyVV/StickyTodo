@@ -1,34 +1,49 @@
 <div class="row">
-    <div class="col-sm-8 col-sm-offset-2">
-        <div class="panel panel-default remove-rad-nav add-todo">
-            <div class="panel-body">
-                <form role="form" id="write-todo-form">
-                    <!--add todo-->
-                    <div id="f_topic">
-                        <input type="text" class="write-todo-input" id="topic_todo" placeholder="write a todo...">
+    <div class="col-sm-2 col-sm-offset-2 my-lists">
+        <h3>My Lists</h3>
+        <ul id="list" class="nav nav-pills nav-stacked" style="margin-top: 2vh;">
+            <li><a href="#">+ Add list</a></li>
+            <!--li class="active"><a href="#">Home</a></li-->
+        </ul>
+    </div>
+    <div class="col-sm-8">
+        <div class="row">
+            <div class="col-sm-8" style="padding-left: 0; padding-right: 0;">
+                <div class="panel panel-default remove-rad-nav add-todo">
+                    <div class="panel-body">
+                        <form role="form" id="write-todo-form">
+                            <!--add todo-->
+                            <div id="f_topic">
+                                <input type="text" class="write-todo-input" id="topic_todo"
+                                       placeholder="write a todo...">
+                            </div>
+                            <!--/add todo-->
+                        </form>
                     </div>
-                    <!--/add todo-->
-                </form>
+                    <!--div class="panel-body" style="border-bottom: 1px solid coral;">
+                        <ul class="list-inline" style="margin-bottom: 0">
+                            <li><a href="#All" id="check_all">Check all</a></li>
+                            <li><a href="#done">Mark as done</a></li>
+                        </ul>
+                    </div-->
+                </div>
             </div>
-            <!--div class="panel-body" style="border-bottom: 1px solid coral;">
-                <ul class="list-inline" style="margin-bottom: 0">
-                    <li><a href="#All" id="check_all">Check all</a></li>
-                    <li><a href="#done">Mark as done</a></li>
-                </ul>
-            </div-->
+        </div>
+        <div class="row">
+            <div class="col-sm-8" style="padding-left: 0; padding-right: 0;">
+                <div class="panel panel-default remove-rad-nav todo-list">
+                    <ul id="list_undone" class="list-group">
+                        <li class="list-group-item todo-status">
+                            <small><i>Undone</i></small>
+                        </li>
+                    </ul>
+                    <ul id="list_done" class="list-group">
+                        <li class="list-group-item todo-status">
+                            <small><i>Completes</i></small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-sm-8 col-sm-offset-2">
-        <div class="panel panel-default remove-rad-nav todo-list">
-            <ul id="list_undone" class="list-group">
-                <li class="list-group-item todo-status"><small><i>Undone</i></small></li>
-            </ul>
-            <ul id="list_done" class="list-group">
-                <li class="list-group-item todo-status"><small><i>Completes</i></small></li>
-            </ul>
-        </div>
-    </div>
-</div>
-
