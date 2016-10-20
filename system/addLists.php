@@ -6,3 +6,4 @@
  * Time: 16:57
  */
 require("stickyTodo.php");
+$sticky = new StickyTodo();
