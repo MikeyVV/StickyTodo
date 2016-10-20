@@ -122,7 +122,7 @@ class StickyTodo
 
     public function get_lists()
     {
-        $this->sql = "select distinct `sticky_lists`.`list_id`, `sticky_lists`.`list_name` from `sticky_lists` natural join `sticky_todo` where `sticky_lists`.`list_owner` = '" . $this->username . "' and `sticky_todo`.`VISIBLE` = 0";
+        $this->sql = "select distinct `sticky_lists`.`list_id`, `sticky_lists`.`list_name` from `sticky_lists` natural join `sticky_todo` where `sticky_lists`.`list_owner` = '" . $this->username . "' and `sticky_todo`.`VISIBLE` = 0 ORDER BY `sticky_lists`.`CREATED_AT` ";
         $this->executeQuery();
     }
 
@@ -133,9 +133,10 @@ class StickyTodo
         $this->executeQuery();
     }
 
-    public function get_todo_of()
+    public function get_todo_of($list_number)
     {
-        $this->sql = "";
+        $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`todo_list_number` = ".$list_number." AND `sticky_todo`.`VISIBLE`=0 ORDER BY  `sticky_todo`.`LAST_MOD` ";
+        $this->executeQuery();
     }
 
     public function get_undone()

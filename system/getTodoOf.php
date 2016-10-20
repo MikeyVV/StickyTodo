@@ -2,16 +2,16 @@
 /**
  * Created by PhpStorm.
  * User: dell
- * Date: 13/10/2559
- * Time: 15:16
+ * Date: 20/10/2559
+ * Time: 19:23
  */
 
 session_start();
 require("stickyTodo.php");
 $sticky = new StickyTodo();
-$sticky->get_lists();
+$list_number = $_POST["list_number"];
+$sticky->get_todo_of($list_number);
 
-//$out = "{\"lists\" : [{\"list_id\":\"0\",\"list_name\":\"All lists\"}, ";
 $out = "{\"lists\" : [";
 for ($i = 0; $i < $sticky->getNumRow(); $i++) {
     if ($out != "{\"lists\" : [") $out .= ",";

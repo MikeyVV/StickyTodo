@@ -62,29 +62,9 @@ function add_new_todo() {
     });
 }
 
-(function get_todo() {
+function get_todo() {
     $.post("system/getTodo.php", {}, function (data, success) {
-        var todoLists = JSON.parse(data);
-        var call_done = true;
-        for (var undone_item = 0; undone_item < todoLists.lists.length; undone_item++) {
-            if (undone_item == todoLists.lists.length - 1)call_done = true;
-            if (todoLists.lists[undone_item].STATUS == 0) {
-                $("#list_undone").append("<a id='todo_" + todoLists.lists[undone_item].ID + "' data-todo-list-id='" + todoLists.lists[undone_item].ID + "' class=\"todo-list-check list-group-item\" onmouseover=\"showDeleteSign(this)\"><div class='checkbox' ><label class=\"label-check-list\"><input onclick=\"checked_done(this,'done')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + todoLists.lists[undone_item].ID + "'></label><label><input id=\"a_todo_list_" + todoLists.lists[undone_item].ID + "\" data-todo-list-id='" + todoLists.lists[undone_item].ID + "' class=\"editable_todo_list\" onfocus=\"edit_list(this);\" type=\"text\" value=\"" + todoLists.lists[undone_item].TOPIC + "\"><\/label><i id=\"del_" + todoLists.lists[undone_item].ID + "\" onclick='deleteTopic(this)' class=\"fa fa-times-circle pull-right\" style=\"display:none;font-size: x-large;\" data-todo-list-id='" + todoLists.lists[undone_item].ID + "' aria-hidden=\"true\"></i><\/div><\/a>");
-            }
-
-        }
-        if (call_done) {
-            for (var done_item = 0; done_item < todoLists.lists.length; done_item++) {
-                if (todoLists.lists[done_item].STATUS == 1) {
-                    $("#list_done").append("<a id='todo_" + todoLists.lists[done_item].ID + "' data-todo-list-id='" + todoLists.lists[done_item].ID + "' class=\"todo-list-check list-group-item\" onmouseover=\"showDeleteSign(this)\"><div class='checkbox'><label><input onclick=\"checked_done(this,'undone')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + todoLists.lists[done_item].ID + "' checked><del><i>" + todoLists.lists[done_item].TOPIC + "</i></del><\/label><i id=\"del_" + todoLists.lists[done_item].ID + "\" onclick='deleteTopic(this)' class=\"fa fa-times-circle pull-right\" style=\"display:none;font-size: x-large;\" data-todo-list-id='" + todoLists.lists[done_item].ID + "' aria-hidden=\"true\"></i><\/div><\/a>");
-                }
-            }
-        }
-    });
-})();
-
-function get_todo_of() {
-    $.post("system/getTodo.php", {}, function (data, success) {
+        clear_list();
         var todoLists = JSON.parse(data);
         var call_done = true;
         for (var undone_item = 0; undone_item < todoLists.lists.length; undone_item++) {
@@ -104,16 +84,42 @@ function get_todo_of() {
     });
 }
 
+get_todo();
+
 (function get_lists() {
     $.get("system/getLists.php", function (data, status) {
         if (status == "success") {
             var lists = JSON.parse(data);
             for (var item = 0; item < lists.lists.length; item++) {
-                $("#list").append("<li><a data-toggle='tab' href='#'>" + lists.lists[item].list_name + "</a></li>");
+                $("#list").append("<li><a data-toggle='tab' href='' data-list-number='"+ lists.lists[item].list_id +"' onclick='get_todo_of(this)'>" + lists.lists[item].list_name + "</a></li>");
             }
         }
     });
 })();
+
+function get_todo_of(list) {
+    $.post("system/getTodoOf.php", {
+        list_number : $(list).attr("data-list-number")
+    }, function (data, success) {
+        clear_list();
+        var todoLists = JSON.parse(data);
+        var call_done = true;
+        for (var undone_item = 0; undone_item < todoLists.lists.length; undone_item++) {
+            if (undone_item == todoLists.lists.length - 1)call_done = true;
+            if (todoLists.lists[undone_item].STATUS == 0) {
+                $("#list_undone").append("<a id='todo_" + todoLists.lists[undone_item].ID + "' data-todo-list-id='" + todoLists.lists[undone_item].ID + "' class=\"todo-list-check list-group-item\" onmouseover=\"showDeleteSign(this)\"><div class='checkbox' ><label class=\"label-check-list\"><input onclick=\"checked_done(this,'done')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + todoLists.lists[undone_item].ID + "'></label><label><input id=\"a_todo_list_" + todoLists.lists[undone_item].ID + "\" data-todo-list-id='" + todoLists.lists[undone_item].ID + "' class=\"editable_todo_list\" onfocus=\"edit_list(this);\" type=\"text\" value=\"" + todoLists.lists[undone_item].TOPIC + "\"><\/label><i id=\"del_" + todoLists.lists[undone_item].ID + "\" onclick='deleteTopic(this)' class=\"fa fa-times-circle pull-right\" style=\"display:none;font-size: x-large;\" data-todo-list-id='" + todoLists.lists[undone_item].ID + "' aria-hidden=\"true\"></i><\/div><\/a>");
+            }
+
+        }
+        if (call_done) {
+            for (var done_item = 0; done_item < todoLists.lists.length; done_item++) {
+                if (todoLists.lists[done_item].STATUS == 1) {
+                    $("#list_done").append("<a id='todo_" + todoLists.lists[done_item].ID + "' data-todo-list-id='" + todoLists.lists[done_item].ID + "' class=\"todo-list-check list-group-item\" onmouseover=\"showDeleteSign(this)\"><div class='checkbox'><label><input onclick=\"checked_done(this,'undone')\" class=\"check_todo_lists\" type='checkbox' name=\"check_todo_lists\" value='" + todoLists.lists[done_item].ID + "' checked><del><i>" + todoLists.lists[done_item].TOPIC + "</i></del><\/label><i id=\"del_" + todoLists.lists[done_item].ID + "\" onclick='deleteTopic(this)' class=\"fa fa-times-circle pull-right\" style=\"display:none;font-size: x-large;\" data-todo-list-id='" + todoLists.lists[done_item].ID + "' aria-hidden=\"true\"></i><\/div><\/a>");
+                }
+            }
+        }
+    });
+}
 
 function addTodoToDatabase() {
     var todo_topic = $("#topic_todo");
@@ -164,6 +170,17 @@ $("#write-todo-form").submit(function (e) {
     addTodoToDatabase();
     $("#topic_todo").val("");
 });
+$("#add_list").submit(function () {
+$.post(
+    "system/addLists.php",
+    {
+        listname : $("#add_list").val()
+    },
+    function (data, success) {
+
+    }
+)
+})
 
 function watchTopicTodo() {
     var new_topic = $("#topic_todo").val();
@@ -227,6 +244,8 @@ function edit_list(ele) {
 }
 
 setInterval(watchTopicTodo, 1000);
+
+
 
 //get_todo();
 
