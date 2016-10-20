@@ -174,6 +174,11 @@ class StickyTodo
         $this->executeQuery();
     }
 
+    public function add_Llists()
+    {
+
+    }
+
     public function status($id, $order)
     {
         $id = mysqli_real_escape_string($this->link, $id);
