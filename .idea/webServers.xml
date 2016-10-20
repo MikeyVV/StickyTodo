@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="7f968e64-bd4a-46fe-a7b9-da868ed4dc5c" name="StickyCloud" url="http://angsila.cs.buu.ac.th">
+        <fileTransfer host="angsila.cs.buu.ac.th" port="22" rootFolder="/export/b/y57/it57d/57160438" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

@@ -133,6 +133,11 @@ class StickyTodo
         $this->executeQuery();
     }
 
+    public function get_todo_of()
+    {
+        $this->sql = "";
+    }
+
     public function get_undone()
     {
         $this->sql = "SELECT * FROM `sticky_todo` WHERE (`sticky_todo`.`POST_BY`='" . $this->username."' AND `sticky_todo`.`STATUS`=0) AND `sticky_todo`.`VISIBLE`=0";
@@ -275,5 +280,3 @@ class StickyTodo
     }
 
 }
-
-//gfhfghfghfg
