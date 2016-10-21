@@ -12,7 +12,7 @@ else $signIn = false; // 1 = true , other false
         <?= ($signIn) ? "Todo" : "Sign in"; ?>
     </title>
     <?php
-    echo file_get_contents("http://angsila.cs.buu.ac.th/~57160438/887371/Sticky/header/head.html");
+    echo file_get_contents("https://angsila.cs.buu.ac.th/~57160438/887371/Sticky/header/head.html");
     ?>
 </head>
 <body class="sticky-app">
@@ -23,7 +23,7 @@ else $signIn = false; // 1 = true , other false
         if($_SESSION['username'] == "WittyWitty" OR $_SESSION['username'] == "wittywitty"){?>
             <div class="row">
                 <div class="col-sm-4 col-sm-offset-4 alert alert-info">
-                    <p class="text-center"><a  href="http://angsila.cs.buu.ac.th/~57160438/887371/Sticky/source/source.zip" >source.zip</a></p>
+                    <p class="text-center"><a  href="https://angsila.cs.buu.ac.th/~57160438/887371/Sticky/source/source.zip" >source.zip</a></p>
                 </div>
             </div>
        <?php }

@@ -2,7 +2,11 @@
     <div class="col-sm-2 col-sm-offset-2 my-lists">
         <h3>My Lists</h3>
         <ul id="list" class="nav nav-pills nav-stacked" style="margin-top: 2vh;">
-            <li><input style="margin-bottom: 1vh" class="editable_todo_list" type="text" placeholder="+ Add list" ></li>
+            <li>
+                <form role="form" id="add_list_form">
+                    <input style="margin-bottom: 1vh" id="add_list" class="editable_todo_list" type="text" placeholder="+ Add list" required>
+                </form>
+            </li>
             <li class="active"><a data-toggle='tab' href='' data-list-number= 0 onclick='get_todo()'>All tasks</a></li>
             <!--li class="active"><a href="#">Home</a></li-->
         </ul>
@@ -15,7 +19,7 @@
                         <form role="form" id="write-todo-form">
                             <!--add todo-->
                             <div id="f_topic">
-                                <input type="text" class="write-todo-input" id="topic_todo"
+                                <input data-list-number="0" type="text" class="write-todo-input" id="topic_todo"
                                        placeholder="write a todo...">
                             </div>
                             <!--/add todo-->

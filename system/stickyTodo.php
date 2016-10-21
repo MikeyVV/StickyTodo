@@ -122,7 +122,7 @@ class StickyTodo
 
     public function get_lists()
     {
-        $this->sql = "select distinct `sticky_lists`.`list_id`, `sticky_lists`.`list_name` from `sticky_lists` natural join `sticky_todo` where `sticky_lists`.`list_owner` = '" . $this->username . "' and `sticky_todo`.`VISIBLE` = 0 ORDER BY `sticky_lists`.`CREATED_AT` ";
+        $this->sql = "select distinct `sticky_lists`.`list_id`, `sticky_lists`.`list_name` from `sticky_lists` natural join `sticky_todo` where `sticky_lists`.`list_owner` = '" . $this->username . "' and `sticky_todo`.`VISIBLE` = 0 ORDER BY `sticky_lists`.`list_id` ";
         $this->executeQuery();
     }
 
@@ -177,6 +177,13 @@ class StickyTodo
         //$this->sql = "INSERT INTO `it57160438`.`sticky_todo` (START`, `POST_BY`, `DUE`, `TOPIC`, `LAST_MOD`) VALUES ('" . $this->username . "', '" . $due . "', '" . $topic . "',NOW());";
         $this->sql = "INSERT INTO `it57160438`.`sticky_todo` (`POST_BY`, `TOPIC`, `LAST_MOD`) VALUES ('" . $this->username . "', '" . $topic . "',NOW());";
         //echo $this->sql;
+        $this->executeQuery();
+    }
+
+    public function add_list($list_name)
+    {
+        $list_name = mysqli_real_escape_string($this->link, $list_name);
+        $this->sql = "INSERT INTO `it57160438`.`sticky_lists` (`list_owner`, `list_name`, `CREATED_AT`) VALUES ('".$this->username."', '".$list_name."', NOW());";
         $this->executeQuery();
     }
 
