@@ -10,7 +10,11 @@ session_start();
 require("stickyTodo.php");
 $sticky = new StickyTodo();
 $list_number = $_POST["list_number"];
-$sticky->get_todo_of($list_number);
+if($list_number == $_SESSION['all_tasks']){
+    $sticky->get_todo();
+}else {
+    $sticky->get_todo_of($list_number);
+}
 
 $out = "{\"lists\" : [";
 for ($i = 0; $i < $sticky->getNumRow(); $i++) {

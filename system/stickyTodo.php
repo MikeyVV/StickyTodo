@@ -18,6 +18,11 @@ class StickyTodo
     private $username = null;
 
     /*
+     * All tasks
+     */
+    private $allTasks = null;
+
+    /*
      * Database query variables.
      */
     private $sql = null;
@@ -27,6 +32,7 @@ class StickyTodo
     function __construct()
     {
         $this->username = $_SESSION['username'];
+        $this->allTasks = $_SESSION['all_tasks'];
         $this->Open();
     }
 
@@ -122,20 +128,21 @@ class StickyTodo
 
     public function get_lists()
     {
-        $this->sql = "select distinct `sticky_lists`.`list_id`, `sticky_lists`.`list_name` from `sticky_lists` natural join `sticky_todo` where `sticky_lists`.`list_owner` = '" . $this->username . "' and `sticky_todo`.`VISIBLE` = 0 ORDER BY `sticky_lists`.`list_id` ";
+        $this->sql = "select distinct `sticky_lists`.`list_id`, `sticky_lists`.`list_name` from `sticky_lists` natural join `sticky_todo` where `sticky_lists`.`list_owner` = '" . $this->username . "' and `sticky_lists`.`list_visible` = 0 ORDER BY `sticky_lists`.`list_id` ";
         $this->executeQuery();
     }
 
     public function get_todo()
     {
-        $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`POST_BY`='" . $this->username."' AND `sticky_todo`.`VISIBLE`=0 ORDER BY  `sticky_todo`.`LAST_MOD` ";
+        //$this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`POST_BY`='" . $this->username."' AND `sticky_todo`.`VISIBLE`=0 ORDER BY  `sticky_todo`.`LAST_MOD` ";
+        $this->sql = "SELECT *  FROM `sticky_todo` natural join `sticky_lists` WHERE `sticky_todo`.`POST_BY` = '" . $this->username."' AND `sticky_todo`.`VISIBLE` = 0 AND `sticky_todo`.`todo_list_number` = `sticky_lists`.`list_id` ORDER BY  `sticky_todo`.`LAST_MOD`";
         //echo $this->sql;
         $this->executeQuery();
     }
 
     public function get_todo_of($list_number)
     {
-        $this->sql = "SELECT * FROM `sticky_todo` WHERE `sticky_todo`.`todo_list_number` = ".$list_number." AND `sticky_todo`.`VISIBLE`=0 ORDER BY  `sticky_todo`.`LAST_MOD` ";
+        $this->sql = "SELECT * FROM `sticky_todo` natural join `sticky_lists` WHERE `sticky_todo`.`POST_BY` = '" . $this->username."' AND `sticky_todo`.`todo_list_number` = ".$list_number." AND `sticky_todo`.`VISIBLE`=0 AND `sticky_todo`.`todo_list_number` = `sticky_lists`.`list_id` ORDER BY  `sticky_todo`.`LAST_MOD` ";
         $this->executeQuery();
     }
 
@@ -170,12 +177,14 @@ class StickyTodo
      * $due = 0000-00-00 00:00:00
      */
 
-    public function add_todo($topic)
+    public function add_todo($topic, $list_number)
     {
         $topic = mysqli_real_escape_string($this->link, $topic);
+        $list_number = mysqli_real_escape_string($this->link, $list_number);
         //$due = mysqli_real_escape_string($this->link, $due);
         //$this->sql = "INSERT INTO `it57160438`.`sticky_todo` (START`, `POST_BY`, `DUE`, `TOPIC`, `LAST_MOD`) VALUES ('" . $this->username . "', '" . $due . "', '" . $topic . "',NOW());";
-        $this->sql = "INSERT INTO `it57160438`.`sticky_todo` (`POST_BY`, `TOPIC`, `LAST_MOD`) VALUES ('" . $this->username . "', '" . $topic . "',NOW());";
+        //if($list_number == $this->allTasks)$list_number = $this->allTasks;
+        $this->sql = "INSERT INTO `it57160438`.`sticky_todo` (`POST_BY`, `TOPIC`, `LAST_MOD`, `todo_list_number`) VALUES ('" . $this->username . "', '" . $topic . "',NOW(), ".$list_number.");";
         //echo $this->sql;
         $this->executeQuery();
     }
@@ -184,6 +193,15 @@ class StickyTodo
     {
         $list_name = mysqli_real_escape_string($this->link, $list_name);
         $this->sql = "INSERT INTO `it57160438`.`sticky_lists` (`list_owner`, `list_name`, `CREATED_AT`) VALUES ('".$this->username."', '".$list_name."', NOW());";
+        $this->executeQuery();
+    }
+
+    public function list_hide($list_id)
+    {
+        $list_id = mysqli_real_escape_string($this->link, $list_id);
+        $this->sql = "UPDATE `it57160438`.`sticky_lists` SET `list_visible` = 1 WHERE `sticky_lists`.`list_id` = ".$list_id.";";
+        $this->executeQuery();
+        $this->sql = "UPDATE `sticky_todo` SET `VISIBLE`= 1 WHERE `POST_BY` = '".$this->username."' AND `todo_list_number` = ".$list_id;
         $this->executeQuery();
     }
 
@@ -232,8 +250,10 @@ class StickyTodo
         $this->executeQuery();
         if (mysqli_num_rows($this->result) == 1) {
             $_SESSION['username'] = mysqli_fetch_object($this->result)->USERNAME;
+            $_SESSION['all_tasks'] = mysqli_fetch_array(mysqli_query($this->link, "SELECT `list_id` FROM `sticky_lists` WHERE `list_owner` = '".$_SESSION['username']."' AND `list_name` = 'All tasks'"))[0];
             if ($stayLoggedIn == "true")
                 setcookie('username', $_SESSION['username'], time() + (86400 * 15), "/");
+                setcookie('all_tasks', $_SESSION['all_tasks'], time() + (86400 * 15), "/");
             return true;
         }
         //echo $this->sql;
@@ -243,6 +263,7 @@ class StickyTodo
     public function signOut()
     {
         setcookie('username', $_SESSION['username'], time() - 3600, '/');
+        setcookie('all_tasks', $_SESSION['all_tasks'], time() - 3600, '/');
         session_destroy();
     }
 
@@ -266,7 +287,7 @@ class StickyTodo
     public function search_topic($topic)
     {
         $topic = mysqli_real_escape_string($this->link, $topic);
-        $this->sql ="SELECT *  FROM `sticky_todo` WHERE (`POST_BY` = '".$this->username."' AND `TOPIC` LIKE '%".$topic."%' ) AND `VISIBLE` = 0 ORDER BY  `sticky_todo`.`LAST_MOD`";
+        $this->sql ="SELECT *  FROM `sticky_todo` natural join `sticky_lists` WHERE `POST_BY` = '".$this->username."' AND `sticky_todo`.`TOPIC` LIKE '%".$topic."%' AND `sticky_todo`.`VISIBLE` = 0 AND `sticky_todo`.`todo_list_number` = `sticky_lists`.`list_id` ORDER BY  `sticky_todo`.`LAST_MOD`";
         $this->executeQuery();
     }
 
@@ -280,6 +301,9 @@ class StickyTodo
             $username = mysqli_real_escape_string($this->link, $username);
             $password = mysqli_real_escape_string($this->link, $password);
             $this->sql = "INSERT INTO `it57160438`.`sticky_user` (`USERNAME`, `PASSWORD`) VALUES ('" . $username . "', '" . "dskeowiwekd" . (hash("sha256", $password) . "skKaoqi92#*3G93fc$^*S@@a2") . "');";
+            $this->executeQuery();
+            $this->sql = "INSERT INTO `it57160438`.`sticky_lists` (`list_owner`, `list_name`, `list_visible`) VALUES ('".$username."', 'All tasks',0);";
+            //echo $this->sql;
             $this->executeQuery();
             return true;
         } else {
